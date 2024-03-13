@@ -10,12 +10,9 @@ const Auth: React.FC = () => {
   // Render your login/signup components based on the user type
   return (
     <div>
-        <h1>Hello</h1>
-        <a href="/api/auth/login">Login</a>
+        <h1>AUTHENTICATED!!!!!!!!!!</h1>
         {/* <h1>{type === 'tenant' ? 'Tenant' : 'Landlord'} Authentication Page</h1> */}
       {/* Render your login/signup components here */}
     </div>
   );
 };
-
-export default Auth;

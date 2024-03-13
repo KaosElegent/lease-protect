@@ -7,7 +7,7 @@ const IndexPage: React.FC = () => {
   const router = useRouter();
 
   const handleButtonClick = (userType: string) => {
-    router.push(`/auth?type=${userType}`);
+    router.push(`/auth/?type=${userType}`);
   };
 
   return (
