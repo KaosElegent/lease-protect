@@ -4,9 +4,9 @@ import React from 'react';
 import { useRouter } from 'next/navigation';
 import { type NextRequest } from 'next/server'
 
+
 const Auth: React.FC = () => {
   const router = useRouter();
- console.log(router)
   // Render your login/signup components based on the user type
   return (
     <div>
