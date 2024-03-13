@@ -128,3 +128,55 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# CONTRACT
+
+# Hardhat files
+contract/cache
+contract/artifacts
+
+# TypeChain files
+contract/typechain
+contract/typechain-types
+
+# solidity-coverage files
+contract/coverage
+contract/coverage.json
+
+# NEXT JS
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
