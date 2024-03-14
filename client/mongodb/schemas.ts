@@ -2,7 +2,7 @@
 
 import dotenv from 'dotenv'
 dotenv.config();
-
+ 
 let Schema = mongoose.Schema;
 
 mongoose.connect(process.env.MONGODB_URI || "");
