@@ -9,9 +9,10 @@ const MainPage: React.FC = () => {
  const { user, error, isLoading } = useUser();
   return (
     <div>
-    <h2>Welcome {user?.name}</h2>
-    <p>Your email address is: {user?.email}</p>
-  </div>
+        <h2>Welcome {user?.name}</h2>
+        <p>Your email address is: {user?.email}</p>
+        <a href="/api/auth/logout">Log Out</a>
+    </div>
   );
 };
 
