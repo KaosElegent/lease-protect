@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+/* import mongoose from 'mongoose'
 
 import dotenv from 'dotenv'
 dotenv.config();
@@ -33,4 +33,4 @@ let docSchema = new Schema({
 });
 let Document = mongoose.model('documents', docSchema);
 
-module.exports = {User, Lease, Document};
+module.exports = {User, Lease, Document}; */

@@ -42,8 +42,8 @@ const CreateLease = () => {
       formObject[key] = value;
     }
 
-    console.log(formObject);
-    console.log(JSON.stringify(formObject));
+    /* console.log(formObject);
+    console.log(JSON.stringify(formObject)); */
 
     const response = await fetch("/api/leases", {
       method: "POST",
