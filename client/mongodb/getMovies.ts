@@ -3,7 +3,7 @@
 import clientPromise from "./mongodb";
 import { GetServerSideProps } from 'next';
 
-interface Movie {
+export interface Movie {
    _id: string;
    title: string;
    metacritic: number;
