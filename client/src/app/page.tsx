@@ -6,7 +6,7 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 const IndexPage: React.FC = () => {
   const router = useRouter();
   const { user, error, isLoading } = useUser();
-  const [userType, setUserType] = useState<string>(() => localStorage.getItem('userType') || '');
+  const [userType, setUserType] = useState<string>(() => (typeof window !== 'undefined' ? localStorage.getItem('userType') || '' : ''));
 
   useEffect(() => {
     if (user) {
