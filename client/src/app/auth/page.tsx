@@ -9,7 +9,7 @@ const Auth: React.FC = () => {
   const type = useSearchParams().get("type");
 
   return (
-    <div>
+    <div >
         <h1>Hello</h1>
         <h1>{type === 'tenant' ? 'Tenant' : 'Landlord'} Authentication Page</h1>
 
