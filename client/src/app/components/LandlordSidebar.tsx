@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Sidebar, { SidebarItem } from "../components/Sidebar";
 import Link from "next/link";
@@ -34,8 +35,12 @@ const LandlordSidebar = () => {
           <SidebarItem icon={<Gear size={20} />} text="Settings" />
         </Link>
 
-        <Link href="/logout">
+        <Link href="/api/auth/logout">
           <SidebarItem icon={<BoxArrowRight size={20} />} text="Log Out" />
+        </Link>
+
+        <Link href="/create-lease">
+          <SidebarItem icon={<BoxArrowRight size={20} />} text="create lease" />
         </Link>
       </Sidebar>
     </>
