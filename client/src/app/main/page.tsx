@@ -15,7 +15,7 @@ const MainPage: React.FC = () => {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch("/api/movie");
+        const response = await fetch("/api/movie" + '?year=1903');
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
