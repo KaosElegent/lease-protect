@@ -25,16 +25,15 @@ const CreateLease = () => {
     let formObject: { [key: string]: FormDataEntryValue[] } = {};
 
     for (let [key, value] of (formData as any).entries()) {
-      if (!formObject[key]) {
-        formObject[key] = [];
+      if (String(key) === "tenantEmail[]" || String(key) === "tenantName[]") {
+        if (!formObject[key]) {
+          formObject[key] = [];
+        }
+        formObject[key].push(value);
+      } else {
+        formObject[key] = value;
       }
-      formObject[key].push(value);
     }
-
-    // add email array
-    const landlordEmail = formObject["landlordEmail"][0];
-    formObject["emails"] = [landlordEmail];
-    tenants.forEach((tenant) => formObject["emails"].push(tenant.email));
 
     console.log(formObject);
 
