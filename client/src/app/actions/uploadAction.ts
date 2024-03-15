@@ -1,18 +1,13 @@
 "use server";
 import path from "path";
-import os from "os";
 import * as fs from "fs";
-// import { v4 as uuidv4 } from "uuid";
 import { v2 as cloudinary } from "cloudinary";
-//import Recording from "../models/fileModel";
-//import connectDB from "../db/config";
-import { mongoose, ObjectId } from 'mongoose'
+import mongoose from 'mongoose';
 import { Document, Lease } from "../../../mongodb/schemas";
 
 
 import dotenv from "dotenv"
 dotenv.config();
-let Schema = mongoose.Schema;
 
 mongoose.connect(process.env.MONGODB_URI || "");
 
@@ -42,9 +37,9 @@ export async function saveFileToLocal(formData: FormData) {
   }
 }
 
-export async function uploadFileToCloudinary(filepath:String,leaseid:String, type:String) {
+export async function uploadFileToCloudinary(filepath:string,leaseid:String, type:String) {
   console.log("dd");
-  const uploadDetails = await cloudinary.uploader.upload(filepath ? filepath : "", {
+  const uploadDetails = await cloudinary.uploader.upload(filepath ? filepath : " ", {
     folder: "Documents",
     public_id: `${leaseid}-${type.replace(' ','_')}`,
   });
@@ -54,7 +49,7 @@ export async function uploadFileToCloudinary(filepath:String,leaseid:String, typ
   return uploadDetails;
 }
 
-async function  updateLease(leaseid:String, type:String) {
+async function  updateLease(leaseid:string, type:String) {
     Document.find({name : `${leaseid}-${type.replace(' ','_')}`}, '_id')
                     .then((doc_id) => {
                         console.log(doc_id);
@@ -73,7 +68,7 @@ async function  updateLease(leaseid:String, type:String) {
                     });
 }
 
-export async function updateMongo(hash:String, url:String, leaseid:String, type:String){
+export async function updateMongo(hash:String, url:String, leaseid:string, type:String){
     Document.find({name: `${leaseid}-${type.replace(' ','_')}`})
         .exec()
         .then((doc:any) => {

@@ -1,11 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { getSession } from "@auth0/nextjs-auth0";
 import LandlordSidebar from "../components/LandlordSidebar";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Lease } from "../../interfaces/leaseInterface";
 import LeaseCard from "../components/LeaseCard";
-import { Link } from "lucide-react";
 
 const SeeLeases = () => {
   const { user, error, isLoading } = useUser();

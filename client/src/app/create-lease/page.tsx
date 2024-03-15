@@ -6,44 +6,12 @@ const CreateLease = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    /* const formData = new FormData(event.currentTarget);
-    const rentalAddress = formData.get("rentalAddress");
-    const city = formData.get("city");
-    const postalcode = formData.get("postalcode");
-    const province = formData.get("province");
-    const landlordName = formData.get("landlordName");
-    const tenantName = formData.get("tenantName");
-    const rentAmount = formData.get("rentAmount");
-    const startDate = formData.get("startDate");
-    const endDate = formData.get("endDate");
-
-    const response = await fetch("/api/leases", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        rentalAddress,
-        city,
-        postalcode,
-        province,
-        landlordName,
-        tenantName,
-        rentAmount,
-        startDate,
-        endDate,
-      }),
-    }); */
-
     const formData = new FormData(event.currentTarget);
     let formObject: { [key: string]: FormDataEntryValue } = {};
 
     for (let [key, value] of (formData as any).entries()) {
       formObject[key] = value;
     }
-
-    /* console.log(formObject);
-    console.log(JSON.stringify(formObject)); */
 
     const response = await fetch("/api/leases", {
       method: "POST",
