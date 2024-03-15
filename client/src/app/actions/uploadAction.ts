@@ -6,6 +6,15 @@ import * as fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
 //import Recording from "../models/fileModel";
 //import connectDB from "../db/config";
+import { mongoose, ObjectId } from 'mongoose'
+import { Document, Lease } from "../../../mongodb/schemas";
+
+
+import dotenv from "dotenv"
+dotenv.config();
+let Schema = mongoose.Schema;
+
+mongoose.connect(process.env.MONGODB_URI || "");
 
 cloudinary.config({ 
     cloud_name: process.env.NEXT_PUBLIC_CLOUD_NAME, 
@@ -43,6 +52,62 @@ export async function uploadFileToCloudinary(filepath,leaseid, type) {
   console.log(uploadDetails);
 
   return uploadDetails;
+}
+
+async function  updateLease(leaseid, type) {
+    Document.find({name : `${leaseid}-${type.replace(' ','_')}`}, '_id')
+                    .then((doc_id) => {
+                        console.log(doc_id);
+                            // update lease
+                        Lease.updateOne({_id: new mongoose.Types.ObjectId(leaseid)},
+                            { $push : {"docIDs" : doc_id}})
+                            .then(() => {
+                                console.log("Lease Updated");
+                            })
+                            .catch((err:any) => {
+                                console.log(err);
+                            })
+                    })
+                    .catch((err:any) => {
+                        console.log("Somethign went wrong with getting new doc's id: ", err);
+                    });
+}
+
+export async function updateMongo(hash:String, url:String, leaseid:String, type:String){
+    Document.find({name: `${leaseid}-${type.replace(' ','_')}`})
+        .exec()
+        .then((doc:any) => {
+            if(!doc.length){
+                // create new
+                let doc = new Document({
+                    name: `${leaseid}-${type.replace(' ','_')}`,
+                    url: url,
+                    hash : hash
+                });
+                doc.save()
+                    .then(() => {
+                        console.log("New Document Saved");
+                        updateLease(leaseid, type)
+                    })
+                    .catch((err:any) => {
+                        console.log(err);
+                    })
+            }
+
+            else{
+                Document.updateOne({name: `${leaseid}-${type.replace(' ','_')}`}, 
+                        { $set : { url : url, hash : hash } })
+                        .exec()
+                        .then(() => {
+                            console.log("Document Updated");
+                        })
+                        .catch((err:any) => {
+                            console.log(err);
+                        })
+                console.log("Doc already exists")
+                console.log(doc)
+            }
+        })
 }
 
 export async function uploadFile(formData, email, title, topic) {
