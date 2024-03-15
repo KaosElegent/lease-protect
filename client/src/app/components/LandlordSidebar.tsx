@@ -19,7 +19,7 @@ const LandlordSidebar = () => {
           <SidebarItem icon={<House size={20} />} text="Dashboard" active />
         </Link>
 
-        <Link href="/properties" style={{ textDecoration: "none" }}>
+        <Link href="/leases" style={{ textDecoration: "none" }}>
           <SidebarItem icon={<Buildings size={20} />} text="Properties" />
         </Link>
 
@@ -39,8 +39,16 @@ const LandlordSidebar = () => {
           <SidebarItem icon={<BoxArrowRight size={20} />} text="Log Out" />
         </Link>
 
+        {/* remove later */}
         <Link href="/create-lease" style={{ textDecoration: "none" }}>
           <SidebarItem icon={<BoxArrowRight size={20} />} text="create lease" />
+        </Link>
+
+        <Link href="/create-contract" style={{ textDecoration: "none" }}>
+          <SidebarItem
+            icon={<BoxArrowRight size={20} />}
+            text="create contract"
+          />
         </Link>
       </Sidebar>
     </>

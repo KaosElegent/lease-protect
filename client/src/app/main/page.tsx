@@ -40,10 +40,10 @@ const MainPage: React.FC = () => {
         },
         body: JSON.stringify({
           role: "tenant",
-          email: "test1@example.com",
+          email: "test6@example.com",
           fName: "Test",
           lName: "Guy",
-          username: "testguy1",
+          username: "testguy6",
           ethAddress: "",
           leaseIDs: [],
         }),

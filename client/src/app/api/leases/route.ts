@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'; 
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import clientPromise from "../../../../mongodb/mongodb";
 
 dotenv.config();
 
@@ -19,6 +20,31 @@ let leaseSchema = new mongoose.Schema({
   
 let Lease = mongoose.models.leases || mongoose.model('leases', leaseSchema);
 
+// query leases collection based on user email
+export async function GET(req: NextRequest, res: NextResponse) {
+    try {
+        const urlParams = new URLSearchParams(req.url.split('?')[1])
+        const email = urlParams.get('email')
+        console.log(email);
+        const client = await clientPromise;
+        const db = client.db("test");
+        
+        // get user
+        const user = await db.collection("users").findOne({ email });
+        console.log(user);
+
+        // get leases from references
+        const leases = await db.collection("leases").find({ _id: { $in: user?.leaseIDs } }).toArray();
+        console.log(leases);
+
+        return NextResponse.json(leases, { status: 200 });
+    } catch (e) {
+        console.error(e);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
+    }
+}
+
+// create new lease
 export async function POST(req: NextRequest, res: NextResponse) {
     try { 
         const { rentalAddress, city, postalcode, province, landlordName, tenantName , rentAmount } = await req.json();

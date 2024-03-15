@@ -4,11 +4,11 @@ import { NextResponse, NextRequest } from 'next/server';
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { User } from "../../../interfaces/userInterface";
+//const User = require('../../../interfaces/userInterface');
 
 dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URI || "");
-
 
 export async function GET(req :Request) {
     try {
