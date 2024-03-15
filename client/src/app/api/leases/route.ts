@@ -15,10 +15,10 @@ export async function GET(req: NextRequest, res: NextResponse) {
         const email = urlParams.get('email')
         console.log(email);
 
-        const user = await User.find({email:email});
+        const user = await User.find({email:email}).exec();
         console.log(user);
 
-        const leases = await Lease.find({ _id: { $in: user.leaseIDs } }).toArray();
+        const leases = await Lease.find({ _id: { $in: user.leaseIDs } }).exec().toArray();
         console.log(leases);
 
         return NextResponse.json(leases, { status: 200 });
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 // create new lease
 export async function POST(req: NextRequest, res: NextResponse) {
     try { 
-        const { rentalAddress, city, postalcode, province, landlordName, tenantName , rentAmount, docIDs, landlordEmail } = await req.json();
+        const { rentalAddress, city, postalcode, province, landlordName, tenants , rentAmount, docIDs, landlordEmail } = await req.json();
 
         let lease = new Lease({
             rentalAddress: rentalAddress,
@@ -39,8 +39,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
             postalcode: postalcode,
             province: province,
             landlordName: landlordName,
-            landlordEmail : landlordEmail
-            tenantName: tenantName,
+            landlordEmail : landlordEmail,
+            tenants : tenants,
             rentAmount: Number(rentAmount),
             docIDs: docIDs,
         });
@@ -53,11 +53,19 @@ export async function POST(req: NextRequest, res: NextResponse) {
             console.log(err);
             return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
         });
-
-        const lease_id = Lease.find
+        
+        const leases = await Lease.find({landlordEmail : landlordEmail}, '_id').exec()
+        const lease_id = leases[-1]._id;
+        let emails = [landlordEmail];
+        tenants.forEach((tenant) => {
+            emails.append(tenant.email);
+        });
 
         //update users
-        User.updateOne({email:landlordEmail}, {$push : {leaseIDs : }})
+        emails.forEach(async (email)=>{
+            await User.updateOne({email:email}, {$push : {leaseIDs : lease_id}});
+        })
+        
 
         return NextResponse.json({ success:"ok" }, { status: 200 })
     } catch (e) {
