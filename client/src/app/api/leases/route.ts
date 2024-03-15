@@ -15,7 +15,8 @@ let leaseSchema = new mongoose.Schema({
     province: String,
     landlordName: String,
     tenantName: String,
-    rentAmount: Number
+    rentAmount: Number,
+    docIDs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Document'}]
   });
   
 let Lease = mongoose.models.leases || mongoose.model('leases', leaseSchema);
@@ -47,7 +48,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 // create new lease
 export async function POST(req: NextRequest, res: NextResponse) {
     try { 
-        const { rentalAddress, city, postalcode, province, landlordName, tenantName , rentAmount } = await req.json();
+        const { rentalAddress, city, postalcode, province, landlordName, tenantName , rentAmount, docIDs } = await req.json();
 
         let lease = new Lease({
             rentalAddress: rentalAddress,
@@ -56,7 +57,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
             province: province,
             landlordName: landlordName,
             tenantName: tenantName,
-            rentAmount: Number(rentAmount)
+            rentAmount: Number(rentAmount),
+            docIDs: docIDs,
         });
 
         lease.save()

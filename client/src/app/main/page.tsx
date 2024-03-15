@@ -58,7 +58,7 @@ const MainPage: React.FC = () => {
 
   return (
     <div className="flex">
-      <LandlordSidebar />
+      <LandlordSidebar active="/" />
       <div className="flex flex-col w-full">
         <h2>Welcome {user?.name}</h2>
         <p>Your email address is: {user?.email}</p>

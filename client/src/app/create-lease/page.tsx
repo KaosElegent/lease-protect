@@ -65,7 +65,7 @@ const CreateLease = () => {
 
   return (
     <div className="flex">
-      <LandlordSidebar />
+      <LandlordSidebar active="/create-lease" />
       <div style={{ flexDirection: "column", padding: "20px" }}>
         <h1>Create Lease</h1>
         <form onSubmit={handleSubmit}>

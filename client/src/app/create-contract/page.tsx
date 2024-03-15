@@ -4,7 +4,7 @@ import LandlordSidebar from "../components/LandlordSidebar";
 const CreateContract = () => {
   return (
     <div className="flex">
-      <LandlordSidebar />
+      <LandlordSidebar active="/create-contract" />
       <div style={{ flex: 1, flexDirection: "column", padding: "20px" }}>
         <h1>Create Contract</h1>
       </div>
