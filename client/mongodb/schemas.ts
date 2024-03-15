@@ -11,6 +11,7 @@ let userSchema = new Schema({
   ethAddress: String,
   leaseIDs: [{type: Schema.Types.ObjectId, ref: 'Lease'}],
 });
+
 export const User = mongoose.models.users || mongoose.model('users', userSchema);
 
 let leaseSchema = new Schema({
@@ -19,6 +20,7 @@ let leaseSchema = new Schema({
   docIDs: [{type: Schema.Types.ObjectId, ref: 'Document'}],
   userIDs: [{type: Schema.Types.ObjectId, ref: 'User'}],
 });
+
 export const Lease = mongoose.models.leases || mongoose.model('leases', leaseSchema);
 
 let docSchema = new Schema({
@@ -26,5 +28,6 @@ let docSchema = new Schema({
   url: String,
   hash: String,
 });
+
 export const Document =mongoose.models.documents || mongoose.model('documents', docSchema);
 

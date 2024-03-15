@@ -42,8 +42,8 @@ const CreateLease = () => {
       formObject[key] = value;
     }
 
-    console.log(formObject);
-    console.log(JSON.stringify(formObject));
+    /* console.log(formObject);
+    console.log(JSON.stringify(formObject)); */
 
     const response = await fetch("/api/leases", {
       method: "POST",
@@ -65,7 +65,7 @@ const CreateLease = () => {
 
   return (
     <div className="flex">
-      <LandlordSidebar />
+      <LandlordSidebar active="/create-lease" />
       <div style={{ flexDirection: "column", padding: "20px" }}>
         <h1>Create Lease</h1>
         <form onSubmit={handleSubmit}>

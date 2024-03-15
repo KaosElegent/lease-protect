@@ -1,50 +1,77 @@
 "use client";
-import { Movie } from "../../../mongodb/getMovies";
 import Link from "next/link";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React from "react";
 import { useState, useEffect } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import { GetServerSideProps } from "next";
 import LandlordSidebar from "../components/LandlordSidebar";
+
+import { User } from "../../interfaces/userInterface";
 
 const MainPage: React.FC = () => {
   const { user, error, isLoading } = useUser();
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+
   useEffect(() => {
     async function fetchData() {
-      try {
-        const response = await fetch("/api/movie");
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+      if (user) {
+        try {
+          const response = await fetch(
+            `/api/user?email=${user.email}&name=${user.name}`
+          );
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          setUsers(data);
+        } catch (error) {
+          console.error("Error fetching data:", error);
         }
-        const data = await response.json();
-        setMovies(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
       }
     }
-
     fetchData();
-  }, []);
+  }, [user]);
+
+  const handleAddUser = async () => {
+    try {
+      const response = await fetch("/api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          role: "tenant",
+          email: "test6@example.com",
+          fName: "Test",
+          lName: "Guy",
+          username: "testguy6",
+          ethAddress: "",
+          leaseIDs: [],
+        }),
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+    } catch (error) {
+      console.error("Error adding user:", error);
+    }
+  };
+
   return (
     <div className="flex">
-      <LandlordSidebar />
-      <h2>Welcome {user?.name}</h2>
-      <p>Your email address is: {user?.email}</p>
-      <Link key="logout" href="/api/auth/logout">
-        <p>Log Out</p>
-      </Link>
-      <ul>
-        {movies.map((movie) => (
-          <li key={movie._id}>
-            <h2>{movie.title}</h2>
-            <p>{movie.plot}</p>
-            {/* Add more details as needed */}
-          </li>
-        ))}
-      </ul>
+      <LandlordSidebar active="/" />
+      <div className="flex flex-col w-full">
+        <h2>Welcome {user?.name}</h2>
+        <p>Your email address is: {user?.email}</p>
+        <button onClick={handleAddUser}>add user</button>
+        {/* <ul>
+          {users.map((user) => (
+            <li key={user._id}>
+              <h2>{user.username}</h2>
+              <p>{user.fName}</p>
+            </li>
+          ))}
+        </ul> */}
+      </div>
     </div>
   );
 };
