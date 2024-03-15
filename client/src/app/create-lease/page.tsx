@@ -122,7 +122,11 @@ const CreateLease = () => {
               className="form-control"
               id="rentAmount"
               name="rentAmount"
+              aria-describedby="rentHelp"
             />
+            <div id="rentHelp" className="form-text">
+              Monthly amount due in CAD
+            </div>
           </div>
 
           <div className="mb-3">
