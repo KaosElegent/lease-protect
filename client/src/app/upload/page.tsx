@@ -5,7 +5,7 @@ import {v2 as cloudinary} from 'cloudinary';
 import fs from 'fs/promises'
 import {createWriteStream} from 'fs'
 import { streamifier } from 'streamifier';
-import { saveFileToLocal } from '../actions/uploadAction';
+import { saveFileToLocal, uploadFileToCloudinary } from '../actions/uploadAction';
 
 cloudinary.config({ 
   cloud_name: process.env.NEXT_PUBLIC_CLOUD_NAME, 
@@ -61,8 +61,9 @@ const FileUploadPage: React.FC = () => {
       const formData = new FormData();
       formData.append('pdf',file);
       console.log(file instanceof File);
-      console.log(saveFileToLocal(formData).then(res => res.filename));
-
+      const localFile = await saveFileToLocal(formData);
+      const cloudFile = await uploadFileToCloudinary(localFile.filepath, "lease33452", selectedCategory);
+      console.log(cloudFile)
       // Send formData to server using fetch or axios
       //const response = await fetch('/api/upload', {
       //  method: 'POST',

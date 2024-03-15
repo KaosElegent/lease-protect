@@ -7,11 +7,11 @@ import { v2 as cloudinary } from "cloudinary";
 //import Recording from "../models/fileModel";
 //import connectDB from "../db/config";
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUD_API_KEY,
-  api_secret: process.env.CLOUD_API_SECRET,
-});
+cloudinary.config({ 
+    cloud_name: process.env.NEXT_PUBLIC_CLOUD_NAME, 
+    api_key: process.env.NEXT_PUBLIC_CLOUD_API_KEY, 
+    api_secret: process.env.NEXT_PUBLIC_CLOUD_API_SECRET 
+  });
 
 export async function saveFileToLocal(formData: FormData) {
   const file = formData.get("pdf");
@@ -23,10 +23,9 @@ export async function saveFileToLocal(formData: FormData) {
       const filePath = path.join(__dirname, file.name);
 
       fs.writeFile(filePath, buffer, (err) => err && console.error(err));
-      console.log(filePath);
       return { filepath: filePath, filename: file.name };
     });
-
+    console.log("finishing local save promise");
     return bufferPromise;
 
   } else {
@@ -34,17 +33,16 @@ export async function saveFileToLocal(formData: FormData) {
   }
 }
 
-function uploadFileToCloudinary(email, title) {
-  const filePath = path.join(__dirname, "test.wav");
-  const promise = cloudinary.v2.uploader.upload(filePath, {
-    folder: "voice-recordings",
-    resource_type: "raw",
-    public_id: `${email}-${title}`,
+export async function uploadFileToCloudinary(filepath,leaseid, type) {
+  console.log("dd");
+  const uploadDetails = await cloudinary.uploader.upload(filepath, {
+    folder: "Documents",
+    public_id: `${leaseid}-${type.replace(' ','_')}`,
   });
 
-  console.log(promise);
+  console.log(uploadDetails);
 
-  return promise;
+  return uploadDetails;
 }
 
 export async function uploadFile(formData, email, title, topic) {
