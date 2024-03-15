@@ -23,7 +23,7 @@ cloudinary.config({
   });
 
 export async function saveFileToLocal(formData: FormData) {
-  const file = formData.get("pdf");
+  const file = formData.get("file");
 
   if (file instanceof Blob) {
     
@@ -42,9 +42,9 @@ export async function saveFileToLocal(formData: FormData) {
   }
 }
 
-export async function uploadFileToCloudinary(filepath,leaseid, type) {
+export async function uploadFileToCloudinary(filepath:String,leaseid:String, type:String) {
   console.log("dd");
-  const uploadDetails = await cloudinary.uploader.upload(filepath, {
+  const uploadDetails = await cloudinary.uploader.upload(filepath ? filepath : "", {
     folder: "Documents",
     public_id: `${leaseid}-${type.replace(' ','_')}`,
   });
@@ -54,7 +54,7 @@ export async function uploadFileToCloudinary(filepath,leaseid, type) {
   return uploadDetails;
 }
 
-async function  updateLease(leaseid, type) {
+async function  updateLease(leaseid:String, type:String) {
     Document.find({name : `${leaseid}-${type.replace(' ','_')}`}, '_id')
                     .then((doc_id) => {
                         console.log(doc_id);

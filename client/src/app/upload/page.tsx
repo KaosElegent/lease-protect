@@ -59,7 +59,7 @@ const FileUploadPage: React.FC = () => {
     try {
       // Start reading the PDF file object as binary data
       const formData = new FormData();
-      formData.append('pdf',file);
+      formData.append('file',file);
       console.log(file instanceof File);
       const localFile = await saveFileToLocal(formData);
       const cloudFile = await uploadFileToCloudinary(localFile.filepath, "65f4b1ae81aada539d89a6f1", selectedCategory);
