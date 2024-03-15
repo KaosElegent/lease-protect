@@ -3,7 +3,7 @@ import clientPromise from "../../../../mongodb/mongodb";
 import { NextResponse, NextRequest } from 'next/server';
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { User } from "../../../interfaces/userInterface";
+import { User } from "../../../../mongodb/schemas";
 //const User = require('../../../interfaces/userInterface');
 
 dotenv.config();
@@ -36,23 +36,11 @@ export async function GET(req :Request) {
     }
 }
 
-let userSchema: mongoose.Schema<User> = new mongoose.Schema({
-    role: String,
-    email: String,
-    fName: String,
-    lName: String,
-    username: String,
-    ethAddress: String,
-    leaseIDs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Lease'}],
-});
-  
-let UserModel = mongoose.models.users || mongoose.model('users', userSchema);
-
 export async function POST(req: NextRequest, res: NextResponse) {
     try { 
         const { role, email, fName, lName, username, ethAddress, leaseIDs } = await req.json();
 
-        let user = new UserModel({
+        let user = new User({
             role: role,
             email: email,
             fName: fName,

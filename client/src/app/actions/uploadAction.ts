@@ -4,7 +4,7 @@ import * as fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from 'mongoose';
 import { Document, Lease } from "../../../mongodb/schemas";
-
+import * as Crypto from 'crypto';
 
 import dotenv from "dotenv"
 dotenv.config();
@@ -17,6 +17,24 @@ cloudinary.config({
     api_secret: process.env.NEXT_PUBLIC_CLOUD_API_SECRET 
   });
 
+async function getHash(filePath){
+  let shashum = Crypto.createHash('sha256');
+  try{
+    let st = new fs.ReadStream(filePath);
+    st.on('data', (d) => {
+      shashum.update(d);
+    });
+    st.on('end', () => {
+      let d = shashum.digest('hex');
+      console.log(d);
+      return d;
+    });
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
 export async function saveFileToLocal(formData: FormData) {
   const file = formData.get("file");
 
@@ -27,6 +45,7 @@ export async function saveFileToLocal(formData: FormData) {
       const filePath = path.join(__dirname, file.name);
 
       fs.writeFile(filePath, buffer, (err) => err && console.error(err));
+
       return { filepath: filePath, filename: file.name };
     });
     console.log("finishing local save promise");

@@ -4,12 +4,14 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import LandlordSidebar from "../components/LandlordSidebar";
+import { useSearchParams } from "next/navigation";
 
 import { User } from "../../interfaces/userInterface";
 
 const MainPage: React.FC = () => {
   const { user, error, isLoading } = useUser();
   const [users, setUsers] = useState<User[]>([]);
+  const type = useSearchParams().get("type");
 
   useEffect(() => {
     async function fetchData() {
@@ -39,11 +41,11 @@ const MainPage: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          role: "tenant",
-          email: "test6@example.com",
-          fName: "Test",
-          lName: "Guy",
-          username: "testguy6",
+          role: type,
+          email: user?.email,
+          fName: user?.name,
+          lName: "",
+          username: "",
           ethAddress: "",
           leaseIDs: [],
         }),

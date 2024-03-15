@@ -15,10 +15,15 @@ let userSchema = new Schema({
 export const User = mongoose.models.users || mongoose.model('users', userSchema);
 
 let leaseSchema = new Schema({
-  name: String,
-  agreementID: Schema.Types.ObjectId,
+  rentalAddress: String,
+  city: String,
+  postalcode: String,
+  province: String,
+  landlordName: String,
+  landlordEmail: String,
+  tenants: [{type: {name: String, email: String}}],
+  rentAmount: Number,
   docIDs: [{type: Schema.Types.ObjectId, ref: 'Document'}],
-  userIDs: [{type: Schema.Types.ObjectId, ref: 'User'}],
 });
 
 export const Lease = mongoose.models.leases || mongoose.model('leases', leaseSchema);
