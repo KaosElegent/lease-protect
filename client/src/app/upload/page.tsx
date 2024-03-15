@@ -11,7 +11,7 @@ const FileUploadPage: React.FC = () => {
     const files = event.target.files;
     if (files && files.length) {
       const file = files[0];
-      if (selectedCategory === '') {
+      if (!selectedCategory) { 
         setFileError('Please select a category before uploading.');
         return;
       }
@@ -23,7 +23,7 @@ const FileUploadPage: React.FC = () => {
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(event.target.value);
-  };
+  };  
 
   const handleDelete = (index: number) => {
     setUploads(prevUploads => prevUploads.filter((_, i) => i !== index));
@@ -31,7 +31,7 @@ const FileUploadPage: React.FC = () => {
 
   const handleSendFiles = async () => {
     // Mock endpoint for sending files
-    const endpoint = 'https://example.com/upload';
+    const endpoint = 'https://';
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
