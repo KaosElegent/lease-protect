@@ -17,6 +17,7 @@ const FileUploadPage: React.FC = () => {
   const [file, setFile] = useState<File>();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
     if(event.target.files){
       setFile(event.target.files[0])
     }
@@ -24,7 +25,7 @@ const FileUploadPage: React.FC = () => {
 
   const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedCategory(event.target.value);
-  };
+  };  
 
   const handleDelete = (index: number) => {
     setUploads(prevUploads => prevUploads.filter((_, i) => i !== index));
