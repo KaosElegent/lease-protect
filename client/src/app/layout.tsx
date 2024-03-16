@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LeaseProtec",
-  description: "LeaseProtec Project",
+  title: "LeaseProtect",
+  description: "LeaseProtect Project",
 };
 
 export default function RootLayout({
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <UserProvider>
-      <body className={inter.className}>{children}</body>
+        <body className={inter.className}>{children}</body>
       </UserProvider>
     </html>
   );
