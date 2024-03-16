@@ -21,7 +21,7 @@ const IndexPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-primary d-flex flex-column align-items-center justify-content-center vh-100 animate-slide-up">
+    <div className="bg-darknavy d-flex flex-column align-items-center justify-content-center vh-100 animate-slide-up">
       {isLoading && (
         <div className="position-fixed top-0 start-0 w-100 text-center text-white bg-primary p-3">Loading...</div>
       )}
@@ -30,22 +30,22 @@ const IndexPage: React.FC = () => {
       </div>
       <div className="text-center text-white">
         <div className="row justify-content-center">
-          <div className="col-sm-6">
+          <div className="col-sm-6 d-flex justify-content-center align-items-center">
             <button
               type="button"
-              className="btn btn-light w-100 mb-3"
-              onClick={() => handleButtonClick("tenant")}
-            >
-              <span className="d-block">Tenant</span>
+              className="btn btn-outline-light btn-lg d-flex align-items-center justify-content-center"
+              style={{ minWidth: '120px' }}
+              onClick={() => handleButtonClick("tenant")}>
+              Tenant
             </button>
           </div>
-          <div className="col-sm-6">
+          <div className="col-sm-6 d-flex justify-content-center align-items-center">
             <button
               type="button"
-              className="btn btn-light w-100 mb-3"
-              onClick={() => handleButtonClick("landlord")}
-            >
-              <span className="d-block">Landlord</span>
+              className="btn btn-outline-light btn-lg d-flex align-items-center justify-content-center"
+              style={{ minWidth: '120px' }}
+              onClick={() => handleButtonClick("landlord")}>
+              Landlord
             </button>
           </div>
         </div>

@@ -2,6 +2,8 @@
 import React from "react";
 import Sidebar, { SidebarItem } from "../components/Sidebar";
 import Link from "next/link";
+import { User } from "../../interfaces/userInterface";
+
 import {
   House,
   Buildings,
@@ -13,14 +15,15 @@ import {
 
 interface Props {
   active: String;
-  userType: String;
+  landlordUser: User;
 }
 
-const LandlordSidebar = ({ active }: Props) => {
+const LandlordSidebar = ({ active, landlordUser: user}: Props) => {
+  const uType = "Landlord"
   return (
     <>
-      <Sidebar>
-        <Link href="/" style={{ textDecoration: "none" }}>
+      <Sidebar user={user} type={uType} >
+        <Link href="/main?type=tenant" style={{ textDecoration: "none" }}>
           <SidebarItem
             icon={<House size={20} />}
             text="Dashboard"
@@ -28,7 +31,7 @@ const LandlordSidebar = ({ active }: Props) => {
           />
         </Link>
 
-        <Link href="/leases" style={{ textDecoration: "none" }}>
+        <Link href="/leases" style={{ textDecoration: "none"}}>
           <SidebarItem
             icon={<Buildings size={20} />}
             text="Properties"

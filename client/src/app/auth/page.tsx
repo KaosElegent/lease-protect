@@ -11,7 +11,7 @@ const Auth: React.FC = () => {
   const type = useSearchParams().get("type");
 
   return (
-    <div className="bg-primary min-vh-100 d-flex flex-column justify-content-center align-items-center">
+    <div className="bg-darknavy min-vh-100 d-flex flex-column justify-content-center align-items-center">
         <h1 className="display-1 text-center text-white mb-4 animate-slide-up">Hello</h1>
         <h2 className="text-center text-white mb-4">{type === 'tenant' ? 'Tenant' : 'Landlord'} Authentication Page</h2>
         <div className="text-center">

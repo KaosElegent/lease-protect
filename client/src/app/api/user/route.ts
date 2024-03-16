@@ -14,7 +14,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     try { 
         const { role, email, fName, lName, username, ethAddress, leaseIDs } = await req.json();
         let cnt = await User.find({ email: email }).exec();
-        console.log(cnt);
         if(cnt.length === 0){
             let user = new User({
                 role: role,

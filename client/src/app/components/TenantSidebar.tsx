@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Sidebar, { SidebarItem } from "../components/Sidebar";
+import { User } from "../../interfaces/userInterface";
 import Link from "next/link";
 import {
   House,
@@ -13,13 +14,15 @@ import {
 
 interface Props {
   active: String;
+  tenantUser: User;
 }
 
-const TenantSidebar = ({ active }: Props) => {
+const TenantSidebar = ({ active, tenantUser : user}: Props) => {
+  const uType = "Tenant"
   return (
     <>
-      <Sidebar>
-        <Link href="/">
+      <Sidebar user={user} type={uType}>
+        <Link href="/main?type=tenant">
           <SidebarItem icon={<House size={20} />} text="Dashboard" active={active === "/"} />
         </Link>
 

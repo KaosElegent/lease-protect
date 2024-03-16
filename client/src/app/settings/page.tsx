@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import LandlordSidebar from "../components/LandlordSidebar";
+import TenantSidebar from "../components/TenantSidebar"
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 const Settings = () => {
@@ -39,7 +40,9 @@ const Settings = () => {
 
   return (
     <div className="flex">
-      <LandlordSidebar active="/settings" userType={userType} />
+      {userType === "Landlord" ?
+        <LandlordSidebar active="/settings" landlordUser={user} /> :
+        <TenantSidebar active="/settings" tenantUser={user} /> }
       <div style={{ flex: 1, flexDirection: "column", padding: "20px" }}>
         <h1>Settings</h1>
         <h2 style={{ fontSize: "1.5em" }}>Update Profile</h2>
