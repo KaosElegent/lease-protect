@@ -2,7 +2,10 @@
 import React, { useState } from 'react';
 import PreviewFile from '../components/PreviewFile';
 import {v2 as cloudinary} from 'cloudinary';
-import { saveFileToLocal, updateMongo, uploadFileToCloudinary } from '../actions/uploadAction';
+import LandlordSidebar from "../components/LandlordSidebar";
+import { saveFileToLocal, updateMongo, uploadFileToCloudinary, getHash } from '../actions/uploadAction';
+import { useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 cloudinary.config({ 
   cloud_name: process.env.NEXT_PUBLIC_CLOUD_NAME, 
@@ -11,10 +14,13 @@ cloudinary.config({
 });
 
 const FileUploadPage: React.FC = () => {
+  const userType = localStorage.getItem('userType') || '';
+  const router = useRouter();
   const [uploads, setUploads] = useState<{ file: File | null, details: string, category: string }[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [fileError, setFileError] = useState<string>('');
   const [file, setFile] = useState<File>();
+  const leaseid = useSearchParams().get("leaseid");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -45,10 +51,16 @@ const FileUploadPage: React.FC = () => {
       formData.append('file',file);
       console.log(file instanceof File);
       const localFile = await saveFileToLocal(formData);
-      const cloudFile = await uploadFileToCloudinary(localFile.filepath, "65f4b1ae81aada539d89a6f1", selectedCategory);
-      updateMongo("hash", cloudFile.url,  "65f4b1ae81aada539d89a6f1", selectedCategory);
+      const hash = await getHash(localFile.filepath);
+      console.log(hash)
+      console.log("calling upload to cloudinary");
+      const cloudFile = await uploadFileToCloudinary(localFile.filepath, leaseid, selectedCategory);
+      console.log("done uploading to cloudinary")
+      updateMongo(hash, cloudFile.url,  leaseid, selectedCategory);
       console.log(cloudFile)
-  
+      router.back();
+      //router.push(`/documents?leaseid=${leaseid}`);
+
     } catch (error) {
       console.error('Error uploading file:', error);
     }
@@ -57,6 +69,8 @@ const FileUploadPage: React.FC = () => {
   };
 
   return (
+    <div className="flex">
+    <LandlordSidebar active="/settings" userType={userType} />
     <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', padding: '20px' }}>
       <form 
         id="upload-file"
@@ -96,6 +110,7 @@ const FileUploadPage: React.FC = () => {
         </div>
       </div>
       </form>
+    </div>
     </div>
   );
 };

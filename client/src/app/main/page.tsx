@@ -9,6 +9,7 @@ import { useSearchParams } from "next/navigation";
 import { User } from "../../interfaces/userInterface";
 
 const MainPage: React.FC = () => {
+  const userType = localStorage.getItem('userType') || '';
   const { user, error, isLoading } = useUser();
   const [users, setUsers] = useState<User[]>([]);
   const type = useSearchParams().get("type");
@@ -46,7 +47,7 @@ const MainPage: React.FC = () => {
 
   return (
     <div className="flex">
-      <LandlordSidebar active="/" />
+      <LandlordSidebar active="/" userType={userType}/>
       <div className="flex flex-col w-full">
         <h2>Welcome {user?.name}</h2>
         <p>Your email address is: {user?.email}</p>
