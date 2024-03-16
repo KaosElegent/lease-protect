@@ -29,7 +29,7 @@ const SeeLeases = () => {
       fetchLeases();
       console.log(leases);
     }
-  }, [user, leases]);
+  }, [user]);
 
   return (
     <div className="flex">

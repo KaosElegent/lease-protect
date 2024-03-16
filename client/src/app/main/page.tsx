@@ -30,6 +30,8 @@ const MainPage: React.FC = () => {
           username: "",
           ethAddress: "",
           leaseIDs: [],
+          popIDs: [],
+          payerIDs: [],
         }),
       });
       if (!response.ok) {
