@@ -12,13 +12,13 @@ mongoose.connect(process.env.MONGODB_URI || "");
 // Update Settings
 export async function PUT(req: NextRequest, res: NextResponse) {
     try { 
-        const { email, fName, lName, username, ethAddress} = await req.json();
-
+        const { email, firstName, lastName, Username, EthereumAddress} = await req.json();
+        console.log("Email: ", email);
         User.updateOne( {email : email}, { $set : {
-            fName : fName,
-            lName : lName,
-            username : username,
-            ethAddress : ethAddress
+            fName : firstName,
+            lName : lastName,
+            username : Username,
+            ethAddress : EthereumAddress
         }}).exec()
             .then(() => {
                 console.log("User Settings Updated!");

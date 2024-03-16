@@ -21,7 +21,8 @@ let leaseSchema = new Schema({
   province: String,
   landlordName: String,
   landlordEmail: String,
-  tenants: [{type: {name: String, email: String}}],
+  tenantEmails: [String],
+  tenantNames: [String],
   rentAmount: Number,
   docIDs: [{type: Schema.Types.ObjectId, ref: 'Document'}],
 });

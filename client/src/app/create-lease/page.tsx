@@ -10,7 +10,7 @@ const CreateLease = () => {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const values = [...tenants];
-    if (event.target.name === "tenantName[]") {
+    if (event.target.name === "tenantNames") {
       values[index].name = event.target.value;
     } else {
       values[index].email = event.target.value;
@@ -25,7 +25,7 @@ const CreateLease = () => {
     let formObject: { [key: string]: FormDataEntryValue[] } = {};
 
     for (let [key, value] of (formData as any).entries()) {
-      if (String(key) === "tenantEmail[]" || String(key) === "tenantName[]") {
+      if (String(key) === "tenantEmails" || String(key) === "tenantNames") {
         if (!formObject[key]) {
           formObject[key] = [];
         }
@@ -142,23 +142,23 @@ const CreateLease = () => {
           <h3>Tenant Information</h3>
           {tenants.map((tenant, index) => (
             <div key={index}>
-              <label htmlFor="tenantName" className="form-label">
+              <label htmlFor="tenantNames" className="form-label">
                 Tenant Name
               </label>
               <input
                 type="text"
                 className="form-control"
-                name="tenantName[]"
+                name="tenantNames"
                 value={tenant.name}
                 onChange={(e) => handleInputChange(index, e)}
               />
-              <label htmlFor="tenantEmail" className="form-label">
+              <label htmlFor="tenantEmails" className="form-label">
                 Tenant Email
               </label>
               <input
                 type="email"
                 className="form-control"
-                name="tenantEmail[]"
+                name="tenantEmails"
                 value={tenant.email}
                 onChange={(e) => handleInputChange(index, e)}
               />

@@ -24,11 +24,11 @@ const SeeLeases = () => {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && leases.length === 0) {
       fetchLeases();
       console.log(leases);
     }
-  }, []);
+  }, [user, leases]);
 
   return (
     <div className="flex">

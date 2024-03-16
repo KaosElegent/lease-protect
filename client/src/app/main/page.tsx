@@ -13,25 +13,7 @@ const MainPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const type = useSearchParams().get("type");
 
-  useEffect(() => {
-    async function fetchData() {
-      if (user) {
-        try {
-          const response = await fetch(
-            `/api/user?email=${user.email}&name=${user.name}`
-          );
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          const data = await response.json();
-          setUsers(data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }
-    }
-    fetchData();
-  }, [user]);
+
 
   const handleAddUser = async () => {
     try {
@@ -58,13 +40,17 @@ const MainPage: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    handleAddUser();
+  }, [user]);
+
   return (
     <div className="flex">
       <LandlordSidebar active="/" />
       <div className="flex flex-col w-full">
         <h2>Welcome {user?.name}</h2>
         <p>Your email address is: {user?.email}</p>
-        <button onClick={handleAddUser}>add user</button>
+        {/*<button onClick={handleAddUser}>add user</button>*/}
         {/* <ul>
           {users.map((user) => (
             <li key={user._id}>

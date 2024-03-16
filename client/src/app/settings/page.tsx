@@ -43,17 +43,19 @@ const Settings = () => {
         <h2 style={{ fontSize: "1.5em" }}>Update Profile</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <fieldset disabled>
-              <div className="form-group">
+            
+              <div className="form-group disabled">
                 <label htmlFor="email">Email</label>
                 <input
                   type="text"
                   id="email"
+                  name="email"
+                  value={user?.email ? user.email : ""}
                   className="form-control"
-                  placeholder={user ? user.email ?? "" : ""}
+                  placeholder={user?.email ? user.email : ""}
                 />
               </div>
-            </fieldset>
+            
           </div>
           <div className="mb-3">
             <label htmlFor="firstName" className="form-label">
@@ -90,14 +92,14 @@ const Settings = () => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="Ethereum Address" className="form-label">
+            <label htmlFor="EthereumAddress" className="form-label">
               Ethereum Address
             </label>
             <input
               type="text"
               className="form-control"
-              id="Ethereum Address"
-              name="Ethereum Address"
+              id="EthereumAddress"
+              name="EthereumAddress"
             />
           </div>
 

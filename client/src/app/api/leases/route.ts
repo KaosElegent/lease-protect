@@ -16,10 +16,16 @@ export async function GET(req: NextRequest, res: NextResponse) {
         console.log(email);
 
         const user = await User.find({email:email}).exec();
-        console.log(user);
+        const lease_ids = user[0].leaseIDs;
+        console.log(user[0]);
 
-        const leases = await Lease.find({ _id: { $in: user.leaseIDs } }).exec().toArray();
-        console.log(leases);
+        let leases = [];
+        for(let id of lease_ids){
+            const aLease = await Lease.find({ _id: id}).exec();
+            leases.push(aLease[0]);
+        }
+        //const leases = await Lease.find({ _id: { $in: user.leaseIDs } }).exec();
+        console.log("Leases: ",leases);
 
         return NextResponse.json(leases, { status: 200 });
     } catch (e) {
@@ -31,7 +37,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 // create new lease
 export async function POST(req: NextRequest, res: NextResponse) {
     try { 
-        const { rentalAddress, city, postalcode, province, landlordName, tenants , rentAmount, docIDs, landlordEmail } = await req.json();
+        const { rentalAddress, city, postalcode, province, landlordName, tenantEmails, tenantNames , rentAmount, docIDs, landlordEmail } = await req.json();
 
         let lease = new Lease({
             rentalAddress: rentalAddress,
@@ -40,26 +46,26 @@ export async function POST(req: NextRequest, res: NextResponse) {
             province: province,
             landlordName: landlordName,
             landlordEmail : landlordEmail,
-            tenants : tenants,
+            tenantEmails : tenantEmails,
+            tenantNames : tenantNames,
             rentAmount: Number(rentAmount),
             docIDs: docIDs,
         });
 
-        lease.save()
-        .then(() => {
-            console.log('Lease was saved to the leases collection');
-        })
-        .catch((err: any) => {
-            console.log(err);
-            return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
-        });
+        await lease.save()
+
+        console.log('Lease was saved to the leases collection');
+        
         
         const leases = await Lease.find({landlordEmail : landlordEmail}, '_id').exec()
-        const lease_id = leases[-1]._id;
-        let emails = [landlordEmail];
-        tenants.forEach((tenant) => {
-            emails.append(tenant.email);
-        });
+        console.log(leases[leases.length-1]);
+        const lease_id = leases[[leases.length-1]]._id;
+
+        let emails = [];
+        emails.push(landlordEmail);
+        for(let em of tenantEmails){
+            emails.push(em);
+        }
 
         //update users
         emails.forEach(async (email)=>{

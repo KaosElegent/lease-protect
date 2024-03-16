@@ -10,53 +10,30 @@ dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URI || "");
 
-export async function GET(req :Request) {
-    try {
-        const urlParams = new URLSearchParams(req.url.split('?')[1])
-        const email = urlParams.get('email')
-        const client = await clientPromise;
-        const db = client.db("test");
-        // Check if a user with the provided email already exists
-        const existingUser = await db.collection("users").findOne({ email: email });
-
-        // add to db if it doesn't exist
-        if (existingUser) {
-            console.log("User already exists");
-            return NextResponse.json(existingUser);
-        } else {
-            const newUser = {
-                email: email,
-            };
-            await db.collection("users").insertOne(newUser);
-            console.log("User added to db");
-            return NextResponse.json(newUser);
-        }
-    } catch (e) {
-        console.error(e);
-    }
-}
-
 export async function POST(req: NextRequest, res: NextResponse) {
     try { 
         const { role, email, fName, lName, username, ethAddress, leaseIDs } = await req.json();
+        let cnt = await User.find({ email: email }).exec();
+        console.log(cnt);
+        if(cnt.length === 0){
+            let user = new User({
+                role: role,
+                email: email,
+                fName: fName,
+                lName: lName,
+                username: username,
+                ethAddress: ethAddress,
+                leaseIDs: leaseIDs
+            });
 
-        let user = new User({
-            role: role,
-            email: email,
-            fName: fName,
-            lName: lName,
-            username: username,
-            ethAddress: ethAddress,
-            leaseIDs: leaseIDs
-        });
-
-        user.save()
-        .then(() => {
-            console.log('User was saved to the users collection');
-        })
-        .catch((err: any) => {
-            console.log(err);
-        });
+            await user.save();
+            
+            console.log('User was saved to the users collection User');
+            
+        }
+        else{
+            console.log("User already exists");
+        }
         return NextResponse.json({ success:"ok" }, { status: 200 })
     } catch (e) {
         console.log("can't post: ", e);
