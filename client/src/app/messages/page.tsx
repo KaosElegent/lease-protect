@@ -3,7 +3,7 @@ import React from "react";
 
 const Messages = () => {
   return (
-    <div>
+    <div className="flex">
       <LandlordSidebar active="/messages" />
       <div style={{ flex: 1, flexDirection: "column", padding: "20px" }}>
         <h1>Messages</h1>

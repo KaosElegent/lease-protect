@@ -21,7 +21,7 @@ const LeaseCard: React.FC<Props> = ({ lease }) => {
       <img
         className="card-img-top"
         src={randomImage.src}
-        alt="Card image cap"
+        alt="Photo of property"
       />
       <div className="card-body">
         <h5 className="card-title">{lease.rentalAddress}</h5>
@@ -31,7 +31,7 @@ const LeaseCard: React.FC<Props> = ({ lease }) => {
         <p className="card-text">Tenant: {lease.tenantName}</p>
         <p className="card-text">Landlord: {lease.landlordName}</p>
         <p className="card-text">Rent: {lease.rentAmount.toString()}</p>
-        <a href="#" className="btn btn-primary">
+        <a href={"/documents?leaseid=" + lease._id} className="btn btn-primary">
           See Details
         </a>
       </div>
