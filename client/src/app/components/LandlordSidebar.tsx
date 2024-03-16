@@ -13,6 +13,7 @@ import {
 
 interface Props {
   active: String;
+  userType: String;
 }
 
 const LandlordSidebar = ({ active }: Props) => {
@@ -35,20 +36,29 @@ const LandlordSidebar = ({ active }: Props) => {
           />
         </Link>
 
-        <Link href="/tenants" style={{ textDecoration: "none" }}>
+        {/* remove later */}
+        <Link href="/create-lease" style={{ textDecoration: "none" }}>
           <SidebarItem
-            icon={<People size={20} />}
-            text="Tenants"
-            active={active === "/tenants"}
+            icon={<BoxArrowRight size={20} />}
+            text="create lease"
+            active={active === "/create-lease"}
           />
         </Link>
 
-        <Link href="/messages" style={{ textDecoration: "none" }}>
+        <Link href="/confirmrent" style={{ textDecoration: "none" }}>
           <SidebarItem
-            icon={<Chat size={20} />}
-            text="Messages"
-            alert
-            active={active === "/messages"}
+            icon={<BoxArrowRight size={20} />}
+            text="confirm rent"
+            active={active === "/confirmrent"}
+          />
+        </Link>
+
+        <Link href="/payrent" style={{ textDecoration: "none" }}>
+          <SidebarItem
+            icon={<BoxArrowRight size={20} />}
+            text="pay rent"
+            active={active === "/payrent"}
+            
           />
         </Link>
 
@@ -64,22 +74,6 @@ const LandlordSidebar = ({ active }: Props) => {
           <SidebarItem icon={<BoxArrowRight size={20} />} text="Log Out" />
         </Link>
 
-        {/* remove later */}
-        <Link href="/create-lease" style={{ textDecoration: "none" }}>
-          <SidebarItem
-            icon={<BoxArrowRight size={20} />}
-            text="create lease"
-            active={active === "/create-lease"}
-          />
-        </Link>
-
-        <Link href="/create-contract" style={{ textDecoration: "none" }}>
-          <SidebarItem
-            icon={<BoxArrowRight size={20} />}
-            text="create contract"
-            active={active === "/create-contract"}
-          />
-        </Link>
       </Sidebar>
     </>
   );

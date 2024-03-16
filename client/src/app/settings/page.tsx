@@ -4,6 +4,8 @@ import LandlordSidebar from "../components/LandlordSidebar";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
 const Settings = () => {
+  const userType = localStorage.getItem('userType') || '';
+
   const { user, error, isLoading } = useUser();
   const [showUpdate, setShowUpdate] = useState(false);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -37,7 +39,7 @@ const Settings = () => {
 
   return (
     <div className="flex">
-      <LandlordSidebar active="/settings" />
+      <LandlordSidebar active="/settings" userType={userType} />
       <div style={{ flex: 1, flexDirection: "column", padding: "20px" }}>
         <h1>Settings</h1>
         <h2 style={{ fontSize: "1.5em" }}>Update Profile</h2>

@@ -6,6 +6,7 @@ import { Lease } from "../../interfaces/leaseInterface";
 import LeaseCard from "../components/LeaseCard";
 
 const SeeLeases = () => {
+  const userType = localStorage.getItem('userType') || '';
   const { user, error, isLoading } = useUser();
   const [leases, setLeases] = useState<Lease[]>([]);
 
@@ -32,7 +33,7 @@ const SeeLeases = () => {
 
   return (
     <div className="flex">
-      <LandlordSidebar active="/leases" />
+      <LandlordSidebar active="/leases" userType={userType}/>
       <div style={{ flex: 1, flexDirection: "column", padding: "20px" }}>
         <h1>Your Leases</h1>
         <div className="flex">

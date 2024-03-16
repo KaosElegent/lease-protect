@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import Sidebar, { SidebarItem } from "../components/Sidebar";
 import Link from "next/link";
@@ -10,28 +11,32 @@ import {
   BoxArrowRight,
 } from "react-bootstrap-icons";
 
-const TenantSidebar = () => {
+interface Props {
+  active: String;
+}
+
+const TenantSidebar = ({ active }: Props) => {
   return (
     <>
       <Sidebar>
         <Link href="/">
-          <SidebarItem icon={<House size={20} />} text="Dashboard" active />
+          <SidebarItem icon={<House size={20} />} text="Dashboard" active={active === "/"} />
         </Link>
 
-        <Link href="/properties">
-          <SidebarItem icon={<CreditCard size={20} />} text="Payments" />
+        <Link href="/leases">
+          <SidebarItem icon={<CreditCard size={20} />} text="Lease" active={active === "/leases"} />
         </Link>
 
-        <Link href="/tenants">
-          <SidebarItem icon={<Folder2Open size={20} />} text="Documents" />
-        </Link>
-
-        <Link href="/messages">
-          <SidebarItem icon={<Chat size={20} />} text="Messages" alert />
+        <Link href="/payrent" style={{ textDecoration: "none" }}>
+          <SidebarItem
+            icon={<Gear size={20} />}
+            text="Pay Rent"
+            active={active === "/payrent"}
+          />
         </Link>
 
         <Link href="/settings">
-          <SidebarItem icon={<Gear size={20} />} text="Settings" />
+          <SidebarItem icon={<Gear size={20} />} text="Settings" active={active === "/settings"} />
         </Link>
 
         <Link href="/logout">

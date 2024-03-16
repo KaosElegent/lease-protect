@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import PreviewFile from '../components/PreviewFile';
 import {v2 as cloudinary} from 'cloudinary';
+import LandlordSidebar from "../components/LandlordSidebar";
 import { saveFileToLocal, updateMongo, uploadFileToCloudinary, getHash } from '../actions/uploadAction';
 import { useRouter } from 'next/navigation';
 import { useSearchParams } from 'next/navigation';
@@ -13,6 +14,7 @@ cloudinary.config({
 });
 
 const FileUploadPage: React.FC = () => {
+  const userType = localStorage.getItem('userType') || '';
   const router = useRouter();
   const [uploads, setUploads] = useState<{ file: File | null, details: string, category: string }[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -66,6 +68,8 @@ const FileUploadPage: React.FC = () => {
   };
 
   return (
+    <div className="flex">
+    <LandlordSidebar active="/settings" userType={userType} />
     <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', padding: '20px' }}>
       <form 
         id="upload-file"
@@ -105,6 +109,7 @@ const FileUploadPage: React.FC = () => {
         </div>
       </div>
       </form>
+    </div>
     </div>
   );
 };

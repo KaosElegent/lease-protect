@@ -1,8 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import LandlordSidebar from "../components/LandlordSidebar";
+import { useRouter } from "next/navigation";
 
 const CreateLease = () => {
+  const userType = localStorage.getItem('userType') || '';
+  const router = useRouter();
   const [tenants, setTenants] = useState([{ name: "", email: "" }]);
 
   const handleInputChange = (
@@ -53,6 +56,7 @@ const CreateLease = () => {
 
     const data = await response.json();
     console.log(data);
+    router.back();
   };
 
   const addTenantField = () => {
@@ -61,7 +65,7 @@ const CreateLease = () => {
 
   return (
     <div className="flex">
-      <LandlordSidebar active="/create-lease" />
+      <LandlordSidebar active="/create-lease" userType={userType}/>
       <div style={{ flexDirection: "column", padding: "20px" }}>
         <h1>Create Lease</h1>
         <form onSubmit={handleSubmit}>
