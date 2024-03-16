@@ -1,49 +1,41 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import LandlordSidebar from "../components/LandlordSidebar";
 
 const CreateLease = () => {
+  const [tenants, setTenants] = useState([{ name: "", email: "" }]);
+
+  const handleInputChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const values = [...tenants];
+    if (event.target.name === "tenantNames") {
+      values[index].name = event.target.value;
+    } else {
+      values[index].email = event.target.value;
+    }
+    setTenants(values);
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    /* const formData = new FormData(event.currentTarget);
-    const rentalAddress = formData.get("rentalAddress");
-    const city = formData.get("city");
-    const postalcode = formData.get("postalcode");
-    const province = formData.get("province");
-    const landlordName = formData.get("landlordName");
-    const tenantName = formData.get("tenantName");
-    const rentAmount = formData.get("rentAmount");
-    const startDate = formData.get("startDate");
-    const endDate = formData.get("endDate");
-
-    const response = await fetch("/api/leases", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        rentalAddress,
-        city,
-        postalcode,
-        province,
-        landlordName,
-        tenantName,
-        rentAmount,
-        startDate,
-        endDate,
-      }),
-    }); */
-
     const formData = new FormData(event.currentTarget);
-    let formObject: { [key: string]: FormDataEntryValue } = {};
+    let formObject: { [key: string]: FormDataEntryValue[] } = {};
 
     for (let [key, value] of (formData as any).entries()) {
-      formObject[key] = value;
+      if (String(key) === "tenantEmails" || String(key) === "tenantNames") {
+        if (!formObject[key]) {
+          formObject[key] = [];
+        }
+        formObject[key].push(value);
+      } else {
+        formObject[key] = value;
+      }
     }
 
     console.log(formObject);
-    console.log(JSON.stringify(formObject));
 
     const response = await fetch("/api/leases", {
       method: "POST",
@@ -63,9 +55,13 @@ const CreateLease = () => {
     console.log(data);
   };
 
+  const addTenantField = () => {
+    setTenants([...tenants, { name: "", email: "" }]);
+  };
+
   return (
     <div className="flex">
-      <LandlordSidebar />
+      <LandlordSidebar active="/create-lease" />
       <div style={{ flexDirection: "column", padding: "20px" }}>
         <h1>Create Lease</h1>
         <form onSubmit={handleSubmit}>
@@ -77,12 +73,8 @@ const CreateLease = () => {
               type="text"
               className="form-control"
               id="rentalAddress"
-              aria-describedby="addressHelp"
               name="rentalAddress"
             />
-            <div id="addressHelp" className="form-text">
-              Enter the address of the rental unit
-            </div>
           </div>
           <div className="mb-3">
             <label htmlFor="city" className="form-label">
@@ -123,6 +115,7 @@ const CreateLease = () => {
             </select>
           </div>
 
+          <h3>Landlord Information</h3>
           <div className="mb-3">
             <label htmlFor="landlordName" className="form-label">
               Landlord Name
@@ -135,16 +128,53 @@ const CreateLease = () => {
             />
           </div>
           <div className="mb-3">
-            <label htmlFor="tenantName" className="form-label">
-              Tenant Name
+            <label htmlFor="landlordEmail" className="form-label">
+              Landlord Email
             </label>
             <input
               type="text"
               className="form-control"
-              id="tenantName"
-              name="tenantName"
+              id="landlordEmail"
+              name="landlordEmail"
             />
           </div>
+
+          <h3>Tenant Information</h3>
+          {tenants.map((tenant, index) => (
+            <div key={index}>
+              <label htmlFor="tenantNames" className="form-label">
+                Tenant Name
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="tenantNames"
+                value={tenant.name}
+                onChange={(e) => handleInputChange(index, e)}
+              />
+              <label htmlFor="tenantEmails" className="form-label">
+                Tenant Email
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                name="tenantEmails"
+                value={tenant.email}
+                onChange={(e) => handleInputChange(index, e)}
+              />
+            </div>
+          ))}
+
+          <button
+            type="submit"
+            className="btn btn-primary"
+            onClick={addTenantField}
+            style={{ margin: "10px" }}
+          >
+            Add Another Tenant
+          </button>
+
+          <h3>Lease Details</h3>
           <div className="mb-3">
             <label htmlFor="rentAmount" className="form-label">
               Monthly Rent
@@ -154,7 +184,11 @@ const CreateLease = () => {
               className="form-control"
               id="rentAmount"
               name="rentAmount"
+              aria-describedby="rentHelp"
             />
+            <div id="rentHelp" className="form-text">
+              Monthly amount due in CAD
+            </div>
           </div>
 
           <div className="mb-3">

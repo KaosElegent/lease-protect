@@ -1,4 +1,4 @@
-import { ChevronFirst, ChevronLast, MoreVertical } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import { useState, useContext } from "react";
 import React from "react";
 

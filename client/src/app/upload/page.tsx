@@ -1,23 +1,25 @@
 "use client"
 import React, { useState } from 'react';
 import PreviewFile from '../components/PreviewFile';
+import {v2 as cloudinary} from 'cloudinary';
+import { saveFileToLocal, updateMongo, uploadFileToCloudinary } from '../actions/uploadAction';
+
+cloudinary.config({ 
+  cloud_name: process.env.NEXT_PUBLIC_CLOUD_NAME, 
+  api_key: process.env.NEXT_PUBLIC_CLOUD_API_KEY, 
+  api_secret: process.env.NEXT_PUBLIC_CLOUD_API_SECRET 
+});
 
 const FileUploadPage: React.FC = () => {
   const [uploads, setUploads] = useState<{ file: File | null, details: string, category: string }[]>([]);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [fileError, setFileError] = useState<string>('');
+  const [file, setFile] = useState<File>();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files && files.length) {
-      const file = files[0];
-      if (!selectedCategory) { 
-        setFileError('Please select a category before uploading.');
-        return;
-      }
-      setFileError('');
-      setUploads(prevUploads => [...prevUploads, { file, details: `File name: ${file.name}, File size: ${formatBytes(file.size)}, File type: ${file.type}`, category: selectedCategory }]);
-      setSelectedCategory(''); // Reset selected category after upload
+
+    if(event.target.files){
+      setFile(event.target.files[0])
     }
   };
 
@@ -29,39 +31,36 @@ const FileUploadPage: React.FC = () => {
     setUploads(prevUploads => prevUploads.filter((_, i) => i !== index));
   };
 
-  const handleSendFiles = async () => {
-    // Mock endpoint for sending files
-    const endpoint = 'https://';
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        body: JSON.stringify(uploads),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      if (response.ok) {
-        // Reset uploads after successful send
-        setUploads([]);
-        console.log('Files sent successfully.');
-      } else {
-        console.error('Failed to send files.');
-      }
-    } catch (error) {
-      console.error('Error:', error);
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    console.log(process.env.NEXT_PUBLIC_CLOUD_API_KEY);
+   console.log('/.env');
+    if (!file) {
+      console.error('No file selected');
+      return;
     }
-  };
 
-  const formatBytes = (bytes: number) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    try {
+      const formData = new FormData();
+      formData.append('file',file);
+      console.log(file instanceof File);
+      const localFile = await saveFileToLocal(formData);
+      const cloudFile = await uploadFileToCloudinary(localFile.filepath, "65f4b1ae81aada539d89a6f1", selectedCategory);
+      updateMongo("hash", cloudFile.url,  "65f4b1ae81aada539d89a6f1", selectedCategory);
+      console.log(cloudFile)
+  
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+  
+   
   };
 
   return (
     <div style={{ backgroundColor: '#ffffff', minHeight: '100vh', padding: '20px' }}>
+      <form 
+        id="upload-file"
+        onSubmit={handleSubmit}>
       <div className="container mt-5">
         <h1 className="mb-4">File Upload</h1>
         <div className="mb-4">
@@ -93,9 +92,10 @@ const FileUploadPage: React.FC = () => {
           ))}
         </div>
         <div className="text-center">
-          <button className="btn btn-primary" onClick={handleSendFiles}>Send Files</button>
+          <button className="btn btn-primary" type='submit'>Send Files</button>
         </div>
       </div>
+      </form>
     </div>
   );
 };
