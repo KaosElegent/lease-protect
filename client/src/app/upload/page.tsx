@@ -50,7 +50,7 @@ const FileUploadPage: React.FC = () => {
       formData.append('file',file);
       console.log(file instanceof File);
       const localFile = await saveFileToLocal(formData);
-      const hash = await getHash(localFile.filepath);
+      const hash = "0x" + await getHash(localFile.filepath);
       console.log(hash)
       console.log("calling upload to cloudinary");
       const cloudFile = await uploadFileToCloudinary(localFile.filepath, leaseid, selectedCategory);

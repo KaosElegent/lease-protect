@@ -7,7 +7,9 @@ export interface Lease {
     postalcode: String,
     province: String,
     landlordName: String,
-    tenantName: String,
+    landlordEmail: String,
+    tenantNames: String,
+    tenantEmails: String,
     rentAmount: Number,
     docIDs: [{type: Schema.Types.ObjectId, ref: 'Document'}];
 }

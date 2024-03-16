@@ -9,6 +9,7 @@ interface Props {
 
 const DocumentCard: React.FC<Props> = ({ document }) => {
   return (
+    <a href={document.url.toString()}>
     <div className="card" style={{ width: "18rem", margin: "20px" }}>
       <img className="card-img-top" src={img1.src} alt="Photo of document" />
       <div className="card-body">
@@ -19,6 +20,7 @@ const DocumentCard: React.FC<Props> = ({ document }) => {
         </p>
       </div>
     </div>
+    </a>
   );
 };
 

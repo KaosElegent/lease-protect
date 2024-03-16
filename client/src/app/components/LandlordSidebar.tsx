@@ -53,12 +53,11 @@ const LandlordSidebar = ({ active }: Props) => {
           />
         </Link>
 
-        <Link href="/payrent" style={{ textDecoration: "none" }}>
+        <Link href="/pop" style={{ textDecoration: "none" }}>
           <SidebarItem
             icon={<BoxArrowRight size={20} />}
-            text="pay rent"
-            active={active === "/payrent"}
-            
+            text="proofs of payment"
+            active={active === "/pop"}
           />
         </Link>
 

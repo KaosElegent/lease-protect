@@ -12,6 +12,7 @@ const CreateLease = () => {
     index: number,
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    event.preventDefault();
     const values = [...tenants];
     if (event.target.name === "tenantNames") {
       values[index].name = event.target.value;
