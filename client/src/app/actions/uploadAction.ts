@@ -17,8 +17,9 @@ cloudinary.config({
     api_secret: process.env.NEXT_PUBLIC_CLOUD_API_SECRET 
   });
 
-async function getHash(filePath){
-  let shashum = Crypto.createHash('sha256');
+export async function getHash(filePath){
+  return new Promise((resolve, reject) => {
+    let shashum = Crypto.createHash('sha256');
   try{
     let st = new fs.ReadStream(filePath);
     st.on('data', (d) => {
@@ -27,12 +28,13 @@ async function getHash(filePath){
     st.on('end', () => {
       let d = shashum.digest('hex');
       console.log(d);
-      return d;
+      resolve(d);
     });
   }
   catch(err){
-    console.log(err);
+    reject(err);
   }
+  });
 }
 
 export async function saveFileToLocal(formData: FormData) {
@@ -88,7 +90,8 @@ async function  updateLease(leaseid:string, type:String) {
 }
 
 export async function updateMongo(hash:String, url:String, leaseid:string, type:String){
-    Document.find({name: `${leaseid}-${type.replace(' ','_')}`})
+  console.log("hash: ", hash);  
+  Document.find({name: `${leaseid}-${type.replace(' ','_')}`})
         .exec()
         .then((doc:any) => {
             if(!doc.length){

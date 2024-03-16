@@ -2,14 +2,21 @@
 import React, { useEffect, useState } from "react";
 import LandlordSidebar from "../components/LandlordSidebar";
 import DocumentCard from "../components/DocumentCard";
+import { Lease } from "../../interfaces/leaseInterface";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
-const Documents: React.FC = () => {
+const Documents: React.FC =  () => {
+  const router = useRouter();
   const [id, setId] = useState("");
+  const [leaseID, setLeaseID] = useState<string>(() => (typeof window !== 'undefined' ? localStorage.getItem('leaseid') || '' : ''));
   const [documents, setDocuments] = useState([]);
-
+  const searchParams = useSearchParams();
   const fetchDocuments = async () => {
     try {
-      const response = await fetch(`/api/documents?leaseid=${id}`);
+      const urlParams = new URLSearchParams(window.location.search);
+      console.log(urlParams.get("leaseid") || "");
+      const response = await fetch(`/api/documents?leaseid=${urlParams.get("leaseid") || ""}`);
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -20,16 +27,18 @@ const Documents: React.FC = () => {
     }
   };
 
+  const addDocument = async () => {
+    setLeaseID(searchParams.get("leaseid") || "");
+    router.push(`/upload?leaseid=${leaseID}`);
+  }
+  
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id") ?? "";
-    setId(id);
-
     if (documents.length === 0) {
       fetchDocuments();
       console.log(documents);
     }
-  }, [id]);
+  }, []);
+  
 
   return (
     <div>
@@ -49,7 +58,7 @@ const Documents: React.FC = () => {
           >
             Refresh
           </button>
-          <a href="/upload" className="btn btn-primary">
+          <a onClick={addDocument} className="btn btn-primary">
             Add New Document
           </a>
         </div>

@@ -1,3 +1,5 @@
+"use client"
+import { useRouter } from "next/navigation";
 import React from "react";
 import { Lease } from "../../interfaces/leaseInterface";
 import img1 from "../../../assets/images/house1.jpg";
@@ -14,8 +16,12 @@ interface Props {
 }
 
 const LeaseCard: React.FC<Props> = ({ lease }) => {
+  const router = useRouter();
   const randomImage = images[Math.floor(Math.random() * images.length)];
-
+  const getDocs = () => {
+    localStorage.setItem('leaseid', lease._id);
+    router.push("/documents?leaseid=" + lease._id);
+  }
   return (
     <div className="card" style={{ width: "18rem", margin: "20px" }}>
       <img
@@ -31,7 +37,7 @@ const LeaseCard: React.FC<Props> = ({ lease }) => {
         <p className="card-text">Tenant: {lease.tenantName}</p>
         <p className="card-text">Landlord: {lease.landlordName}</p>
         <p className="card-text">Rent: {lease.rentAmount.toString()}</p>
-        <a href={"/documents?leaseid=" + lease._id} className="btn btn-primary">
+        <a onClick={getDocs} className="btn btn-primary">
           See Details
         </a>
       </div>
