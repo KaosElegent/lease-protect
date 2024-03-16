@@ -46,16 +46,15 @@ contract Lease{
     }
 
     // Payment (Landlord)
-    event rentReceived(uint256 timestamp, address payer, uint256 months);
-    event rentNotReceived(uint256 timestamp, address indexed payer, uint256 months);
-    function confirmRent(bool _choice, address _tenant, uint256 _months) public{
+    event rentReceived(uint256 timestamp, address payer);
+    event rentNotReceived(uint256 timestamp, address indexed payer);
+    function confirmRent(bool _choice, address _tenant) public{
         require(msg.sender == landlord);
-        require(_months <= 0);
         if(_choice == true){
-            emit rentReceived(block.timestamp, _tenant, _months);
+            emit rentReceived(block.timestamp, _tenant);
         }
         else{
-            emit rentNotReceived(block.timestamp, _tenant, _months);
+            emit rentNotReceived(block.timestamp, _tenant);
         }
     }
 }

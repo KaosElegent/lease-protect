@@ -35,12 +35,17 @@ const SeeUsers = () => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     
-    console.log(await contract.payRent(hash,
-        formData.get("rentAmount"),
+    let response = await fetch("/api/getEth?email=" + formData.get('email'));
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log(data);
+    console.log(await contract.confirmRent(true, data.eth,
         {from: addressAccount}));
         setRefresh(true);
 
-    const response = await fetch("/api/payers", {
+    response = await fetch("/api/payers", {
       method: "DELETE",
       headers: new Headers({
         "Content-Type": "application/json",
@@ -52,11 +57,6 @@ const SeeUsers = () => {
       console.error(`Error: ${response.status}`);
       return;
     }
-    
-    console.log(await contract.payRent(hash,
-        formData.get("rentAmount"),
-        {from: addressAccount}));
-        setRefresh(true);
 
     router.back();
   
