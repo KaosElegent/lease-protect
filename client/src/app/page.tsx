@@ -21,22 +21,40 @@ const IndexPage: React.FC = () => {
   };
 
   return (
-    <div className="bg-primary d-flex align-items-center justify-content-center vh-100">
+    <div className="bg-primary d-flex flex-column align-items-center justify-content-center vh-100 animate-slide-up">
       {isLoading && (
         <div className="position-fixed top-0 start-0 w-100 text-center text-white bg-primary p-3">Loading...</div>
       )}
-      <div className="text-center text-white">
+      <div className="text-center text-white mb-5">
         <h1>Welcome!</h1>
-        <div className="btn-group mt-3" role="group" aria-label="User Type Buttons">
-          <button type="button" className="btn btn-light" onClick={() => handleButtonClick("tenant")}>Tenant</button>
-          <button type="button" className="btn btn-light" onClick={() => handleButtonClick("landlord")}>Landlord</button>
+      </div>
+      <div className="text-center text-white">
+        <div className="row justify-content-center">
+          <div className="col-sm-6">
+            <button
+              type="button"
+              className="btn btn-light w-100 mb-3"
+              onClick={() => handleButtonClick("tenant")}
+            >
+              <span className="d-block">Tenant</span>
+            </button>
+          </div>
+          <div className="col-sm-6">
+            <button
+              type="button"
+              className="btn btn-light w-100 mb-3"
+              onClick={() => handleButtonClick("landlord")}
+            >
+              <span className="d-block">Landlord</span>
+            </button>
+          </div>
         </div>
       </div>
       {error && (
         <div className="position-fixed top-0 start-0 w-100 text-center text-white bg-danger p-3">{error.message}</div>
       )}
     </div>
-  );
+  );  
 };
 
 export default IndexPage;
