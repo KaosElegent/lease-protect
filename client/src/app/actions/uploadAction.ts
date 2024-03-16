@@ -3,7 +3,7 @@ import path from "path";
 import * as fs from "fs";
 import { v2 as cloudinary } from "cloudinary";
 import mongoose from 'mongoose';
-import { Document, Lease } from "../../../mongodb/schemas";
+import { Document, Lease, User } from "../../../mongodb/schemas";
 import * as Crypto from 'crypto';
 
 import dotenv from "dotenv"
@@ -126,6 +126,59 @@ export async function updateMongo(hash:String, url:String, leaseid:string, type:
             }
         })
 }
+
+export async function  updateUserPop(realleaseid:String, email:String, leaseid:string, type:String) {
+  const usrs = await User.find({email:email}).exec();
+  const u_id = usrs[0]._id;
+
+  const leases = await Lease.find({_id:realleaseid}).exec();
+  const l_email = leases[0].landlordEmail;
+  const usrs2 = await User.find({email:l_email}).exec();
+  console.log(l_email);
+  console.log(usrs2);
+  const l_id = usrs2[0]._id;
+
+  Document.find({name : `${leaseid}-${type.replace(' ','_')}`}, '_id')
+        .then((doc_id) => {
+            User.updateOne({_id: new mongoose.Types.ObjectId(u_id)},
+                { $push : {"popIDs" : doc_id}})
+                .then(() => {
+                    console.log("User Pop Updated");
+                })
+                .catch((err:any) => {
+                    console.log(err);
+                })
+
+              User.updateOne({_id: new mongoose.Types.ObjectId(l_id)},
+              { $push : {"payerIDs" : u_id}})
+              .then(() => {
+                  console.log("Payer Updated in Landlord");
+              })
+              .catch((err:any) => {
+                  console.log(err);
+              })
+        })
+        .catch((err:any) => {
+            console.log("Somethign went wrong with getting new doc's id: ", err);
+        });
+}
+
+export async function updateMongoPop(hash:String, url:String, leaseid:string, type:String){
+  
+  let doc = new Document({
+      name: `${leaseid}-${type.replace(' ','_')}`,
+      url: url,
+      hash : hash
+  });
+  doc.save()
+      .then(() => {
+          console.log("New Document Saved");
+      })
+      .catch((err:any) => {
+          console.log(err);
+      })
+}
+
 
 export async function uploadFile(formData, email, title, topic) {
   try {

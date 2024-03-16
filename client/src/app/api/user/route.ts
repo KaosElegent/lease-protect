@@ -12,7 +12,7 @@ mongoose.connect(process.env.MONGODB_URI || "");
 
 export async function POST(req: NextRequest, res: NextResponse) {
     try { 
-        const { role, email, fName, lName, username, ethAddress, leaseIDs } = await req.json();
+        const { role, email, fName, lName, username, ethAddress, leaseIDs, popIDs, payerIDs } = await req.json();
         let cnt = await User.find({ email: email }).exec();
         if(cnt.length === 0){
             let user = new User({
@@ -22,7 +22,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
                 lName: lName,
                 username: username,
                 ethAddress: ethAddress,
-                leaseIDs: leaseIDs
+                leaseIDs: leaseIDs,
+                popIDs: popIDs,
+                payerIDs: payerIDs,
             });
 
             await user.save();

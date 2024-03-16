@@ -2,25 +2,22 @@
 import React, { useEffect, useState } from "react";
 import LandlordSidebar from "../components/LandlordSidebar";
 import DocumentCard from "../components/DocumentCard";
-import { Lease } from "../../interfaces/leaseInterface";
+import { User } from "../../interfaces/userInterface";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const Documents: React.FC = () => {
   const userType = localStorage.getItem('userType') || '';
   const router = useRouter();
-  const [id, setId] = useState("");
-  const [leaseID, setLeaseID] = useState<string>(() =>
-    typeof window !== "undefined" ? localStorage.getItem("leaseid") || "" : ""
-  );
   const [documents, setDocuments] = useState([]);
   const searchParams = useSearchParams();
+  const { user, error, isLoading } = useUser();
+
   const fetchDocuments = async () => {
     try {
-      const urlParams = new URLSearchParams(window.location.search);
-      console.log(urlParams.get("leaseid") || "");
       const response = await fetch(
-        `/api/documents?leaseid=${urlParams.get("leaseid") || ""}`
+        `/api/pop?email=${user?.email}`
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -32,18 +29,8 @@ const Documents: React.FC = () => {
     }
   };
 
-  const addDocument = async () => {
-    setLeaseID(searchParams.get("leaseid") || "");
-    router.push(`/upload?leaseid=${leaseID}`);
-  };
-
   const goBack = async () => {
     router.back();
-  };
-
-  const payRent = async () => {
-    setLeaseID(searchParams.get("leaseid") || "");
-    router.push(`/payrent?leaseid=${leaseID}`);
   };
 
   useEffect(() => {
@@ -58,7 +45,7 @@ const Documents: React.FC = () => {
       <div className="flex">
         <LandlordSidebar active="/leases" userType={userType}/>
         <div style={{ flex: 1, flexDirection: "column", padding: "20px" }}>
-          <h1>Lease Documents</h1>
+          <h1>Proof of Purchase Documents</h1>
           <div className="flex">
             {documents.map((documentData) => (
               <DocumentCard document={documentData} />
@@ -78,20 +65,7 @@ const Documents: React.FC = () => {
           >
             Refresh
           </button>
-          <a
-            onClick={addDocument}
-            className="btn btn-primary"
-            style={{ margin: 20 }}
-          >
-            Add New Document
-          </a>
-          <a
-            onClick={payRent}
-            className="btn btn-primary"
-            style={{ margin: 20 }}
-          >
-            Pay Rent
-          </a>
+        
         </div>
       </div>
     </div>

@@ -10,6 +10,8 @@ let userSchema = new Schema({
   username: String,
   ethAddress: String,
   leaseIDs: [{type: Schema.Types.ObjectId, ref: 'Lease'}],
+  popIDs: [{type: Schema.Types.ObjectId, ref: 'Pop'}],
+  payerIDs: [{type: Schema.Types.ObjectId, ref: 'Payer'}],
 });
 
 export const User = mongoose.models.users || mongoose.model('users', userSchema);

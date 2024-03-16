@@ -2,7 +2,9 @@
 import React, { useState } from "react";
 import LandlordSidebar from "../components/LandlordSidebar";
 import { useRouter } from "next/navigation";
-import {load, makePayment} from "../../funcs";
+import { saveFileToLocal, updateMongoPop, uploadFileToCloudinary, getHash, updateUserPop } from '../actions/uploadAction';
+import {load} from "../../funcs";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const CreateLease = () => {
   const userType = localStorage.getItem('userType') || '';
@@ -10,9 +12,15 @@ const CreateLease = () => {
   const [refresh, setRefresh] = React.useState<boolean>(true);
   const [addressAccount, setAddressAccount] = React.useState<any>(null);
   const [contract, setContract] = React.useState<any>(null);
+  const [file, setFile] = useState<File>();
+  const { user, error, isLoading } = useUser();
+  const [leaseID, setLeaseID] = useState<string>(() =>
+    typeof window !== "undefined" ? localStorage.getItem("leaseid") || "" : ""
+  );
   //const scdata = load();
 
   React.useEffect(() => {
+    setLeaseID(localStorage.getItem("leaseid") || "");
     if (!refresh) return;
     setRefresh(false);
     load().then((e) => {
@@ -21,14 +29,52 @@ const CreateLease = () => {
     });
   });
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if(event.target.files){
+      setFile(event.target.files[0])
+    }
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    //console.log(await scdata);
+    setLeaseID(localStorage.getItem("leaseid") || "");
     const formData = new FormData(event.currentTarget);
+    
+    let hash = "";
+    if (!file) {
+      console.error('No file selected');
+      return;
+    }
+
+    try {
+      const formData2 = new FormData();
+      formData2.append('file',file);
+      console.log(file instanceof File);
+      const localFile = await saveFileToLocal(formData2);
+      hash = "0x" + await getHash(localFile.filepath);
+      console.log(hash)
+      console.log("calling upload to cloudinary");
+      const tmpTime = Date.now().toString();
+      const cloudFile = await uploadFileToCloudinary(localFile.filepath, "pop", tmpTime);
+      console.log("done uploading to cloudinary")
+      await updateMongoPop(hash, cloudFile.url,  "pop", tmpTime);
+      await updateUserPop(leaseID, user?.email,"pop",tmpTime);
+      console.log(cloudFile)
+
+
+
+      router.back();
+      //router.push(`/documents?leaseid=${leaseid}`);
+
+    } catch (error) {
+      console.error('Error uploading file:', error);
+    }
+    
+    
 
     console.log(formData.get("rentAmount"));
     console.log(contract);
-    console.log(await contract.payRent("0x3fd54831f488a22b28398de0c567a3b064b937f54f81739ae9bd545967f3abab",
+    console.log(await contract.payRent(hash,
             formData.get("rentAmount"),
             {from: addressAccount}));
             setRefresh(true);
@@ -54,6 +100,9 @@ const CreateLease = () => {
             />
             <div id="rentHelp" className="form-text">
               Number of Months
+            </div>
+            <div className="custom-file ml-3">
+              <input type="file" className="custom-file-input" onChange={handleFileChange} />
             </div>
           </div>
           <button type="submit" className="btn btn-primary">

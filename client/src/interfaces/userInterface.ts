@@ -9,4 +9,6 @@ export interface User {
     username: String,
     ethAddress: String,
     leaseIDs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Lease'}],
+    popIDs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Pop'}],
+  payerIDs: [{type: mongoose.Schema.Types.ObjectId, ref: 'Payer'}],
 }
