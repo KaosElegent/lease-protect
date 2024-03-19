@@ -171,7 +171,6 @@ const CreateLease = () => {
           ))}
 
           <button
-            type="submit"
             className="btn btn-primary"
             onClick={addTenantField}
             style={{ margin: "10px" }}

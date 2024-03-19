@@ -1,7 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import LandlordSidebar from "../components/LandlordSidebar";
+import TenantSidebar from "../components/TenantSidebar";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { useSearchParams } from "next/navigation";
 import { Lease } from "../../interfaces/leaseInterface";
 import LeaseCard from "../components/LeaseCard";
 
@@ -9,6 +11,7 @@ const SeeLeases = () => {
   const userType = localStorage.getItem('userType') || '';
   const { user, error, isLoading } = useUser();
   const [leases, setLeases] = useState<Lease[]>([]);
+  const type = useSearchParams().get("type");
 
   // query for leases of the user
   const fetchLeases = async () => {
@@ -33,7 +36,9 @@ const SeeLeases = () => {
 
   return (
     <div className="flex">
-      <LandlordSidebar active="/leases" userType={userType}/>
+      {type === "landlord" ? 
+        <LandlordSidebar active="/leases" landlordUser={user}/> :
+        <TenantSidebar active="/leases" tenantUser={user}/>}
       <div style={{ flex: 1, flexDirection: "column", padding: "20px" }}>
         <h1>Your Leases</h1>
         <div className="flex">

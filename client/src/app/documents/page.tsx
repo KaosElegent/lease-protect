@@ -1,15 +1,19 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import LandlordSidebar from "../components/LandlordSidebar";
+import TenantSidebar from "../components/TenantSidebar";
 import DocumentCard from "../components/DocumentCard";
 import { Lease } from "../../interfaces/leaseInterface";
 import { useSearchParams } from "next/navigation";
+import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter } from "next/navigation";
 
 const Documents: React.FC = () => {
   const userType = localStorage.getItem('userType') || '';
   const router = useRouter();
+  const { user, error, isLoading } = useUser();
   const [id, setId] = useState("");
+  const type = useSearchParams().get("type");
   const [leaseID, setLeaseID] = useState<string>(() =>
     typeof window !== "undefined" ? localStorage.getItem("leaseid") || "" : ""
   );
@@ -56,7 +60,9 @@ const Documents: React.FC = () => {
   return (
     <div>
       <div className="flex">
-        <LandlordSidebar active="/leases" userType={userType}/>
+      {type === "landlord" ? 
+        <LandlordSidebar active="/leases" landlordUser={user}/> :
+        <TenantSidebar active="/leases" tenantUser={user}/>}
         <div style={{ flex: 1, flexDirection: "column", padding: "20px" }}>
           <h1>Lease Documents</h1>
           <div className="flex">
